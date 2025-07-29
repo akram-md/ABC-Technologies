@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+    stages {
+        stage('Code Checkout - Clone') {
+            steps {
+                git ' https://github.com/akram-md/ABC-Technologies' 
+            }
+        }
+        stage('Code Compile - Build') {
+            steps {
+                sh 'mvn clean compile'
+            }
+        }
+        stage('Unit Test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+        stage('Code Package') {
+            steps {
+                sh 'mvn package'
+            }
+        }
+    }
+}
