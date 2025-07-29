@@ -1,2 +1,2 @@
 # abctechnologies code
-"# assignment1" 
+This is the repo for Edureka Post Graduate Program in DevOps - Industrial Grade Project I (Batch 47)
