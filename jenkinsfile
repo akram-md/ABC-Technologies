@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Code Checkout - Clone') {
             steps {
-                git ' https://github.com/akram-md/ABC-Technologies' 
+                git branch: 'main', url: 'https://github.com/akram-md/ABC-Technologies'
             }
         }
         stage('Code Compile - Build') {
