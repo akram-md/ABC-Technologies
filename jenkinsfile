@@ -1,22 +1,22 @@
 pipeline {
     agent any
     stages {
-        stage('Code Checkout - Clone') {
+        stage('Task 1: Code Checkout (Clone)') {
             steps {
                 git branch: 'main', url: 'https://github.com/akram-md/ABC-Technologies'
             }
         }
-        stage('Code Compile - Build') {
+        stage('Task 2: Code Compile (Build)') {
             steps {
                 sh 'mvn clean compile'
             }
         }
-        stage('Unit Test') {
+        stage('Task 2: Unit Test') {
             steps {
                 sh 'mvn test'
             }
         }
-        stage('Code Package') {
+        stage('Task 2: Code Package') {
             steps {
                 sh 'mvn package'
             }
