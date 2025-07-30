@@ -1,25 +1,34 @@
 pipeline {
-    agent any
+    agent none  // Defining agents per stage - task 2, step 3
     stages {
+
         stage('Task 1: Code Checkout (Clone)') {
+            agent { label 'master' }  // This runs on the master
             steps {
                 git branch: 'main', url: 'https://github.com/akram-md/ABC-Technologies'
             }
         }
+
         stage('Task 2: Code Compile (Build)') {
+            agent { label 'maven-slave' }  // Runs on slave node
             steps {
                 sh 'mvn clean compile'
             }
         }
+
         stage('Task 2: Unit Test') {
+            agent { label 'maven-slave' }  // Runs on slave node
             steps {
                 sh 'mvn test'
             }
         }
+
         stage('Task 2: Code Package') {
+            agent { label 'maven-slave' }  // Runs on slave node
             steps {
                 sh 'mvn package'
             }
         }
+
     }
 }
