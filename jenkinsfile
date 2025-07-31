@@ -1,34 +1,46 @@
 pipeline {
-    agent none  // Defining agents per stage - task 2, step 3
+    agent any
     stages {
-
         stage('Task 1: Code Checkout (Clone)') {
-            agent { label 'master' }  // This runs on the master
             steps {
                 git branch: 'main', url: 'https://github.com/akram-md/ABC-Technologies'
             }
         }
-
         stage('Task 2: Code Compile (Build)') {
-            agent { label 'maven-slave' }  // Runs on slave node
             steps {
                 sh 'mvn clean compile'
             }
         }
-
         stage('Task 2: Unit Test') {
-            agent { label 'maven-slave' }  // Runs on slave node
             steps {
                 sh 'mvn test'
             }
         }
-
         stage('Task 2: Code Package') {
-            agent { label 'maven-slave' }  // Runs on slave node
             steps {
                 sh 'mvn package'
             }
         }
-
+		stage('Task 3: Build Docker Image') {
+		 	steps {
+		 		//unstash 'build-artifacts'  // Retrieve the WAR file from stash
+				sh 'cp /var/lib/jenkins/workspace/$JOB_NAME/target/ABCtechnologies-1.0.war /var/lib/jenkins/workspace/$JOB_NAME/abc.war'
+		 		sh 'docker build -t mdakram2989/abc_tech:$BUILD_NUMBER .'
+				//sh 'docker tag abc_tech:$BUILD_NUMBER mdakram2989/abc_tech:$BUILD_NUMBER .'
+		 	}
+		 }
+		 stage('Task 3: Push Docker Image') {
+		 	steps {
+				withDockerRegistry([ credentialsId: "dockerhub", url: "" ])
+				{
+		 		sh 'docker push mdakram2989/abc_tech:$BUILD_NUMBER'
+				}
+		 	}
+		 }
+		 stage('Task 3: Deploy on a container') {
+		 	steps {
+		 		sh 'docker run -itd -P mdakram2989/abc_tech:$BUILD_NUMBER'
+		 	}
+		 }
     }
 }
