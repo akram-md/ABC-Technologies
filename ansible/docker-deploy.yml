@@ -1,0 +1,66 @@
+---
+- name: Build and Deploy Docker Container
+  hosts: docker_hosts
+  become: yes
+  vars:
+    push_to_registry: true  # Default value
+    container_name: "abc_app"
+    image_name: "mdakram2989/abc_tech"
+    build_number: "{{ lookup('env', 'BUILD_NUMBER') }}"
+    app_port: 8080
+    host_port: 8080
+
+  tasks:
+    - name: Create build directory
+      file:
+        path: "/tmp/build"
+        state: directory
+        mode: '0755'
+
+    - name: Copy and rename WAR file
+      copy:
+        src: "{{ workspace }}/target/ABCtechnologies-1.0.war"
+        dest: "/tmp/build/abc_tech.war"
+        remote_src: no 
+
+    - name: Copy Dockerfile
+      copy:
+        src: "{{ workspace }}/Dockerfile"
+        dest: "/tmp/build/Dockerfile"
+        remote_src: no
+
+    - name: Build Docker image
+      community.docker.docker_image:
+        name: "{{ image_name }}:{{ build_number }}"
+        build:
+          path: "/tmp/build"
+          dockerfile: "Dockerfile"
+        source: build
+        force_source: yes
+
+    - name: Clean up build directory
+      file:
+        path: "/tmp/build"
+        state: absent
+
+    - name: Authenticate
+      docker_login:
+        username: "{{ registry_username }}"
+        password: "{{ registry_password }}"
+      when: push_to_registry
+
+
+    - name: Push image
+      docker_image:
+        name: "{{ image_name }}:{{ build_number }}"
+        push: yes
+      when: push_to_registry
+
+    - name: Run container
+      docker_container:
+        name: "{{ container_name }}"
+        image: "{{ image_name }}:{{ build_number }}"
+        ports:
+          - "{{ host_port }}:{{ app_port }}"
+        state: started
+        restart_policy: unless-stopped

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: abc-tech
+  labels:
+    app: abc-tech
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: abc-tech
+  template:
+    metadata:
+      labels:
+        app: abc-tech
+    spec:
+      containers:
+      - name: abc-tech
+        image: mdakram2989/abc_tech:{{ build_number }}
+        ports:
+        - containerPort: 8080
+        imagePullPolicy: Always
