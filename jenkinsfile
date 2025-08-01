@@ -22,7 +22,7 @@ pipeline {
             }
         }
 		
-		// Task [Task 3 - Build Docker Image + Task 3 - Deploy on a container] has been enhanced in [Task 4  - Ansible Docker Build, Push and Deploy]
+	// Task [Task 3 - Build Docker Image + Task 3 - Deploy on a container] has been enhanced in [Task 4  - Ansible Docker Build, Push and Deploy]
 		
 	//	stage('Task 3: Build Docker Image') {
 	//	 	steps {
