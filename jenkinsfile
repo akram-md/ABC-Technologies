@@ -47,7 +47,11 @@ pipeline {
 	//	 }
 	//	stage('Task 4: Deploy to kubernetes k8s]') {
 	//	 	steps {
+<<<<<<< HEAD
 	//			sh "sed -i 's/abc_tech:latest/abc_tech:$BUILD_NUMBER/g' k8s/abc_tech_deployment.yaml"
+=======
+	//			sh "sed -i 's/abc_tech:latest/abc_tech:$BUILD_NUMBER/g' abc_tech_deployment.yaml"
+>>>>>>> 1e6e013afb12654f8e3b6f5532215e66031e78b7
 	//	 		sh 'kubectl apply -f abc_tech_deployment.yaml'
 	//	 	}
 	//	 }
@@ -94,4 +98,8 @@ pipeline {
 		}
 
    }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 1e6e013afb12654f8e3b6f5532215e66031e78b7
