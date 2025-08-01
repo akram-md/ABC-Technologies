@@ -1,9 +1,6 @@
 # abctechnologies code
+# INDUSTRIAL GRADE PROJECT REPORT – I
 This is the repo for Edureka Post Graduate Program in DevOps - Industrial Grade Project I (Batch 47)
-
-Post Graduate Program in DevOps 
-INDUSTRIAL GRADE PROJECT REPORT – I
-Student Name: Akram Mohammed ||Batch: 47
 
 Business Challenge Requirement
 ABC technologies is a leading online retail store. ABC has recently acquired a large retails offline business store. The business store has large number of stores across the globe but is following conventional pattern of development and deployment. As a result, it has landed to great loss and are facing below challenges. 
@@ -33,8 +30,8 @@ Make sure the following are installed on your system or cloud environment:
 Git bash (windows) or git installed on local laptop
 
 Pre-requisites: 
-	Need to have Git bash (windows) or git installed on laptop
-	Should have an account on github
+- Need to have Git bash (windows) or git installed on laptop
+- Should have an account on github
 
 Steps:
 1.	Start the gitbash
@@ -60,7 +57,6 @@ Set Up GitHub Repository:
 1.	Login into your github: https://github.com/akram-md
 2.	Goto Repositories - > https://github.com/akram-md?tab=repositories -> Create a new repositories
 3.	Named the repository as “ABC Technologies” and enter description as “ This is the repo for Edureka Post Graduate Program in DevOps - Industrial Grade Project I (Batch 47)” and then click on “Create Repository”
-
 
 4.	Push an existing repository (codebase) of “ABC Technologies” from the local laptop (git) to the github 
 URL of the Git Repo: https://github.com/akram-md/ABC-Technologies.git
@@ -115,13 +111,13 @@ sudo apt-get install jenkins
 
 
 Starting a Jenkins
-	Enable the Jenkins service to start at boot with the command:
+- Enable the Jenkins service to start at boot with the command:
 o	sudo systemctl enable Jenkins
 
-	Starting the Jenkins service with the command:
+- Starting the Jenkins service with the command:
 o	sudo systemctl start Jenkins
 
-	Check the status of the Jenkins service using the command:
+- Check the status of the Jenkins service using the command:
 o	sudo systemctl status jenkins
 
 
@@ -132,6 +128,7 @@ Launch the Jenkins URL: http://3.98.131.118:8080/
 
 Creating a CI Pipeline in Jenkins
 CI -> Download (cloning), compile, unit test, package (war folder)
+
 Create a Pipeline:
 1.	New Item > Pipeline
 2.	In Pipeline section, select "Pipeline script from SCM"
@@ -170,6 +167,7 @@ Let’s take:
 •	We have set up a slave node labeled: maven-slave
 •	We want Task 2 (Build, Test, Package) to run on the slave
 •	Jenkins master handles cloning (lightweight job)
+
 Updated Jenkinsfile with Master-Slave Setup (for Task 2, Step 3)
 pipeline {
     agent none  // We’ll define agents per stage
@@ -217,7 +215,7 @@ Task 3:  Write a Docket file Create an Image and container on docker host. Integ
 2.	2 to create a docker image 2. In the docker image add code to move the war file to tomcat server and build the image
 
 Steps:
-Deployment  Deploy in a server (virtual machine, ec2 instance)
+Deployment-> Deploy in a server (virtual machine, ec2 instance)
 
 Optional:
 Terraform to create an ec2 instance on AWS
@@ -266,8 +264,6 @@ $sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin
 3.	Verify that the installation is successful by running the hello-world image
 $sudo docker run hello-world
 
- 
-
 4.	Setting up Dockerhub
 -	Create an account on dockerhub / Should know your dockerhub credentials
 https://hub.docker.com/repositories/mdakram2989
@@ -284,10 +280,10 @@ Steps:
 4.	Store scoped to Jenkins  Click on global
 5.	Add credentials
 6.	Enter the dockerhub user name and password and give the ID to your dockerhub credentials that will be used in the docker push image.
- 
 
 6.	Install docker pipeline plugin
 Procedure of building docker image and launching it as a container
+
 Example Procedure:
 1.	dockerfile
 2.	docker build –t mdakram2989/abc_tech:v1 .  Create the image on my local machine
@@ -365,7 +361,6 @@ Task 4: Integrate Docker host with Ansible. Write ansible playbook to create Ima
 3.	Integrate Kubernetes with ansible  
 4.	Ansible playbook to create deployment and service
 
-
 a.	Kubernetes Deployment & Service Files
 
 Set up Kubernetes cluster
@@ -432,9 +427,7 @@ Enter your:
 -	Region (e.g., ca-central-1)
 -	Output format (default: json)
 
- 
 Step 2: Create EKS Cluster Using eksctl
-
 $eksctl create cluster \
 --name abc-tech-cluster \
 --version 1.28 \
@@ -448,12 +441,10 @@ $eksctl create cluster \
 
 This will take 10–15 minutes. Once complete, your kubeconfig will be set automatically.
 
-
 Step 3: Verify Connection to the Cluster
 kubectl get nodes
 
 we should see 2 nodes in Ready status
-
 
 Integrate Kubernetes with Jenkins
 Add a stage in your pipeline to: Jenkinsfile
@@ -641,7 +632,6 @@ Write a playbook to:
         password: "{{ registry_password }}"
       when: push_to_registry
 
-
     - name: Push image
       docker_image:
         name: "{{ image_name }}:{{ build_number }}"
@@ -783,10 +773,10 @@ b.	Install Node Exporter on target servers
 c.	Configure Prometheus to scrape metrics from Node Exporter
 d.	Install Grafana and connect it to Prometheus
 e.	Create dashboards in Grafana to monitor:
-	CPU usage
-	Memory usage
-	Network metrics
-	Application performance
+- CPU usage
+- Memory usage
+- Network metrics
+- Application performance
 
 Download and install Prometheus:
 wget https://github.com/prometheus/prometheus/releases/download/v2.47.0/prometheus-2.47.0.linux-amd64.tar.gz
@@ -834,8 +824,8 @@ pkill prometheus
 ./prometheus --config.file=prometheus.yml &
 
 Install and Configure Grafana
-	Add Prometheus as data source.
-	Import dashboards for CPU, Memory, Network, etc.
+- Add Prometheus as data source.
+- Import dashboards for CPU, Memory, Network, etc.
 
 sudo apt-get install -y apt-transport-https
 sudo apt-get install -y software-properties-common wget
@@ -849,31 +839,31 @@ sudo systemctl start grafana-server
 sudo systemctl enable grafana-server
 
 Grafana Dashboard:
-	Access http://3.98.131.118:3000 (default login: admin/admin)
-	Add Prometheus data source (http://3.98.131.118:9090)
-	Import dashboard ID 315 for Kubernetes monitoring
+- Access http://3.98.131.118:3000 (default login: admin/admin)
+- Add Prometheus data source (http://3.98.131.118:9090)
+- Import dashboard ID 315 for Kubernetes monitoring
 
 Connect Grafana to Prometheus
-	Add Prometheus as a Data Source:
+1. Add Prometheus as a Data Source:
 -	In Grafana UI, go to Configuration > Data Sources.
 -	Select Prometheus.
 -	Set URL:  http://3.98.131.118:9090
 -	Click Save & Test.
-	Import a Dashboard:
+2. Import a Dashboard:
 -	Go to Create > Import.
 -	Use Dashboard ID 1860 (Node Exporter Full dashboard).
 -	Select Prometheus as the data source.
 -	Click Import.
 
 Check Monitoring:
-	Prometheus: http://3.98.131.118:9090
-	Grafana: http://3.98.131.118:3000
+- Prometheus: http://3.98.131.118:9090
+- Grafana: http://3.98.131.118:3000
 
 Verification: Verify Metrics in Grafana
-	Check Application:
+- Check Application:
 kubectl get services
-	Access the external IP for abc-tech
-	See dashboards for:
+- Access the external IP for abc-tech
+See dashboards for:
 -	CPU Usage (total, per core, breakdown)
 -	Memory Utilization
 -	Network I/O
