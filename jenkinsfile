@@ -21,32 +21,77 @@ pipeline {
                 sh 'mvn package'
             }
         }
-		stage('Task 3: Build Docker Image') {
-		 	steps {
-		 		//unstash 'build-artifacts'  // Retrieve the WAR file from stash
-				sh 'cp /var/lib/jenkins/workspace/$JOB_NAME/target/ABCtechnologies-1.0.war /var/lib/jenkins/workspace/$JOB_NAME/abc.war'
-		 		sh 'docker build -t mdakram2989/abc_tech:$BUILD_NUMBER .'
-				//sh 'docker tag abc_tech:$BUILD_NUMBER mdakram2989/abc_tech:$BUILD_NUMBER .'
-		 	}
-		 }
-		 stage('Task 3: Push Docker Image') {
-		 	steps {
-				withDockerRegistry([ credentialsId: "dockerhub", url: "" ])
-				{
-		 		sh 'docker push mdakram2989/abc_tech:$BUILD_NUMBER'
-				}
-		 	}
-		 }
-		 stage('Task 3: Deploy on a container') {
-		 	steps {
-		 		sh 'docker run -itd -P mdakram2989/abc_tech:$BUILD_NUMBER'
-		 	}
-		 }
-		 stage('Task 4: Deploy to kubernetes k8s]') {
-		 	steps {
-				sh "sed -i 's/abc_tech:latest/abc_tech:$BUILD_NUMBER/g' abc_tech_deployment.yaml"
-		 		sh 'kubectl apply -f abc_tech_deployment.yaml'
-		 	}
-		 }
-    }
+		
+	// Task [Task 3 - Build Docker Image + Task 3 - Deploy on a container] has been enhanced in [Task 4  - Ansible Docker Build, Push and Deploy]
+		
+	//	stage('Task 3: Build Docker Image') {
+	//	 	steps {
+	//	 		//unstash 'build-artifacts'  // Retrieve the WAR file from stash
+	//			sh 'cp /var/lib/jenkins/workspace/$JOB_NAME/target/ABCtechnologies-1.0.war /var/lib/jenkins/workspace/$JOB_NAME/abc.war'
+	//	 		sh 'docker build -t mdakram2989/abc_tech:$BUILD_NUMBER .'
+	//			//sh 'docker tag abc_tech:$BUILD_NUMBER mdakram2989/abc_tech:$BUILD_NUMBER .'
+	//	 	}
+	//	 }
+	//	 stage('Task 3: Push Docker Image') {
+	//	 	steps {
+	//			withDockerRegistry([ credentialsId: "dockerhub", url: "" ])
+	//			{
+	//	 		sh 'docker push mdakram2989/abc_tech:$BUILD_NUMBER'
+	//			}
+	//	 	}
+	//	 }
+	//	 stage('Task 3: Deploy on a container') {
+	//	 	steps {
+	//	 		sh 'docker run -itd -P mdakram2989/abc_tech:$BUILD_NUMBER'
+	//	 	}
+	//	 }
+	//	stage('Task 4: Deploy to kubernetes k8s]') {
+	//	 	steps {
+	//			sh "sed -i 's/abc_tech:latest/abc_tech:$BUILD_NUMBER/g' abc_tech_deployment.yaml"
+	//	 		sh 'kubectl apply -f abc_tech_deployment.yaml'
+	//	 	}
+	//	 }
+		 
+		 stage('Task 4 - Ansible Docker Build, Push and Deploy') {
+			agent any
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'dockerhub',
+                        usernameVariable: 'REGISTRY_USER',
+                        passwordVariable: 'REGISTRY_PASS'
+                    )
+                ]) {
+                    ansiblePlaybook(
+                        playbook: "${WORKSPACE}/ansible/docker-deploy.yml",
+                        inventory: "${WORKSPACE}/ansible/inventory.ini",
+                        extras: """
+                            -e 'registry_username=${REGISTRY_USER}'
+                            -e 'registry_password=${REGISTRY_PASS}'
+                            -e 'workspace=${WORKSPACE}'
+                            -e 'build_number=${BUILD_NUMBER}'
+                            -e 'push_to_registry=true' 
+                            -e 'ansible_python_interpreter=/usr/bin/python3'
+                        """.stripIndent(),
+                        colorized: true
+                    )
+                }
+            }
+        }
+
+		stage('Task 4 - Ansible K8s Deploy') {
+			agent any
+			steps {
+				ansiblePlaybook(
+					playbook: "${WORKSPACE}/ansible/k8s-deploy.yml",
+					inventory: "${WORKSPACE}/ansible/inventory.ini",
+					extras: """
+						-e 'workspace=${WORKSPACE}'
+						-e 'build_number=${BUILD_NUMBER}'
+					"""
+				)
+			}
+		}
+
+   }
 }
